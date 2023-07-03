@@ -5,11 +5,12 @@ import hello.hellospring.repository.MemberRepository;
 import hello.hellospring.repository.MemoryMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -24,9 +25,10 @@ public class MemberService {
 //       Optional<Member> result = memberRepository.findByName(member.getName());
         //Optional로 감쌌기때문에 if( ~~~ == null) 같은 조건문대신 다양한 Optional 메서드를 사용할 수 있다. null값이 예상되는 로직엔 Optional을 감싸주자.
 
-        validateDuplicateMember(member); //중복회원 검증 cntrl + t 를 누르고 Extract Method 사용.
-        memberRepository.save(member);
-        return member.getId();
+        Long start = System.currentTimeMillis();
+            validateDuplicateMember(member); //중복회원 검증 cntrl + t 를 누르고 Extract Method 사용.
+            memberRepository.save(member);
+            return member.getId();
     }
 
     private void validateDuplicateMember(Member member) {

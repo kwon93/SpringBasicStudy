@@ -4,29 +4,20 @@ import hello.hellospring.domain.Member;
 import hello.hellospring.repository.MemberRepository;
 import hello.hellospring.repository.MemoryMemberRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-//모듈만 테스트하는 단위 테스트.
-class MemberServiceTest {
-
-    MemberService memberService;
-    MemoryMemberRepository MemberRepository;
-
-    @BeforeEach //테스트 실행전에 메모리멤버리파짓토리를 만들고 멤버 서비스에 넣어준다.
-    public void beforeEach(){
-        MemberRepository = new MemoryMemberRepository();
-        memberService = new MemberService(MemberRepository);
-    }
-
-
-    @AfterEach
-    public void afterEach(){
-        MemberRepository.clearStore();
-    }
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+//DB를 연결한 통합테스트
+@SpringBootTest // 스프링 컨테이너와 함께 테스트를 실행한다. (자바 클래스내에서만 테스트를 하는게 아님.)
+@Transactional //DB의 데이터를 Test가 끝나고 Rollback하는 Annotaion. 다른 테스트에 영향을 주지않기위해 사용.
+class MemberServiceintegrationTest {
+    @Autowired MemberService memberService;
+   @Autowired MemberRepository MemberRepository;
 
 
     //Test는 given(~가 주어졌을때), when(~~한 상황에서) then(~~가 나와야한다.) 로 대게 이루어져 있다.
